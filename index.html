@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>India Location Selector</title>
+<title>India Location & Board Selector</title>
 <link href="https://fonts.googleapis.com/css2?family=Tiro+Devanagari+Hindi&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -16,10 +16,9 @@
     --green: #138808;
     --selected-bg: #FFF3EC;
     --shadow: 0 4px 24px rgba(26,26,46,0.08);
+    --blue: #2D6BE4;
   }
-
   * { box-sizing: border-box; margin: 0; padding: 0; }
-
   body {
     font-family: 'DM Sans', sans-serif;
     background: var(--light-bg);
@@ -29,296 +28,97 @@
     justify-content: center;
     padding: 32px 16px;
   }
-
-  .container {
-    width: 100%;
-    max-width: 540px;
-  }
-
-  .header {
-    text-align: center;
-    margin-bottom: 32px;
-  }
-
-  .header .flag-stripe {
-    display: flex;
-    height: 4px;
-    border-radius: 4px;
-    overflow: hidden;
-    margin-bottom: 20px;
-  }
-
-  .header .flag-stripe span {
-    flex: 1;
-  }
-
+  .container { width: 100%; max-width: 540px; }
+  .header { text-align: center; margin-bottom: 32px; }
+  .flag-stripe { display: flex; height: 4px; border-radius: 4px; overflow: hidden; margin-bottom: 20px; }
+  .flag-stripe span { flex: 1; }
   .stripe-saffron { background: #FF9933; }
   .stripe-white { background: #FFFFFF; border-top: 1px solid #eee; border-bottom: 1px solid #eee; }
   .stripe-green { background: #138808; }
-
-  .header h1 {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 13px;
-    font-weight: 600;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 6px;
-  }
-
-  .header p {
-    font-size: 22px;
-    font-weight: 300;
-    color: var(--deep);
-    letter-spacing: -0.3px;
-  }
-
-  .header p strong {
-    font-weight: 600;
-    color: var(--saffron);
-  }
-
-  .card {
-    background: var(--card);
-    border-radius: 16px;
-    box-shadow: var(--shadow);
-    border: 1px solid var(--border);
-    overflow: hidden;
-  }
-
-  .step {
-    padding: 20px 24px;
-    border-bottom: 1px solid var(--border);
-    transition: background 0.2s;
-  }
-
+  .header h1 { font-size: 13px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+  .header p { font-size: 22px; font-weight: 300; color: var(--deep); letter-spacing: -0.3px; }
+  .header p strong { font-weight: 600; color: var(--saffron); }
+  .card { background: var(--card); border-radius: 16px; box-shadow: var(--shadow); border: 1px solid var(--border); overflow: hidden; }
+  .step { padding: 20px 24px; border-bottom: 1px solid var(--border); transition: background 0.2s; }
   .step:last-child { border-bottom: none; }
-
   .step.active { background: var(--selected-bg); }
-  .step.disabled { opacity: 0.45; pointer-events: none; }
-
-  .step-label {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 10px;
-  }
-
+  .step.disabled { opacity: 0.4; pointer-events: none; }
+  .step-label { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
   .step-num {
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    background: var(--border);
-    color: var(--muted);
-    font-size: 11px;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    transition: all 0.2s;
+    width: 24px; height: 24px; border-radius: 50%; background: var(--border);
+    color: var(--muted); font-size: 11px; font-weight: 600;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.2s;
   }
-
-  .step.active .step-num {
-    background: var(--saffron);
-    color: white;
-  }
-
-  .step.done .step-num {
-    background: var(--green);
-    color: white;
-  }
-
-  .step-title {
-    font-size: 12px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--muted);
-  }
-
-  .step.active .step-title,
-  .step.done .step-title {
-    color: var(--deep);
-  }
-
-  .select-wrap {
-    position: relative;
-  }
-
+  .step.active .step-num { background: var(--saffron); color: white; }
+  .step.done .step-num { background: var(--green); color: white; }
+  .step-title { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); }
+  .step.active .step-title, .step.done .step-title { color: var(--deep); }
+  .select-wrap { position: relative; }
   .select-wrap::after {
-    content: '';
-    position: absolute;
-    right: 14px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 0;
-    height: 0;
-    border-left: 5px solid transparent;
-    border-right: 5px solid transparent;
-    border-top: 6px solid var(--muted);
-    pointer-events: none;
+    content: ''; position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+    width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent;
+    border-top: 6px solid var(--muted); pointer-events: none;
   }
-
   select {
-    width: 100%;
-    padding: 12px 40px 12px 14px;
-    border: 1.5px solid var(--border);
-    border-radius: 10px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    font-weight: 400;
-    color: var(--deep);
-    background: white;
-    appearance: none;
-    -webkit-appearance: none;
-    cursor: pointer;
-    transition: border-color 0.2s, box-shadow 0.2s;
-    outline: none;
+    width: 100%; padding: 12px 40px 12px 14px; border: 1.5px solid var(--border);
+    border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 400;
+    color: var(--deep); background: white; appearance: none; -webkit-appearance: none;
+    cursor: pointer; transition: border-color 0.2s, box-shadow 0.2s; outline: none;
   }
-
-  select:focus {
-    border-color: var(--saffron);
-    box-shadow: 0 0 0 3px rgba(255, 107, 26, 0.12);
+  select:focus { border-color: var(--saffron); box-shadow: 0 0 0 3px rgba(255,107,26,0.12); }
+  .board-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+  .tag {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 5px 10px; border-radius: 20px; font-size: 12px; font-weight: 500;
+    border: 1.5px solid; cursor: pointer; transition: all 0.15s; user-select: none;
   }
-
-  select option[value=""] { color: var(--muted); }
-
+  .tag.national { background: #EEF4FF; border-color: #BDD1FF; color: #2D6BE4; }
+  .tag.international { background: #F0FFF4; border-color: #B8EDD0; color: #1A7A45; }
+  .tag.state { background: #FFF3EC; border-color: #FFCFB3; color: #C04A00; }
+  .tag.sanskrit { background: #FFF8EE; border-color: #FFE0A0; color: #9A6000; }
+  .tag.madrasa { background: #F5F0FF; border-color: #D4C0FF; color: #6B3FCC; }
+  .tag.university { background: #F0F9FF; border-color: #B0DCFF; color: #1A6B99; }
+  .tag.selected { box-shadow: 0 0 0 2px currentColor; font-weight: 600; }
+  .tag .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; opacity: 0.7; }
+  .no-boards { font-size: 12px; color: var(--muted); padding: 4px 0; font-style: italic; }
+  .board-section-label { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; margin-top: 10px; }
+  .board-section-label:first-child { margin-top: 0; }
   .result-card {
-    margin-top: 20px;
-    padding: 18px 20px;
+    margin-top: 20px; padding: 18px 20px;
     background: linear-gradient(135deg, #FFF3EC 0%, #FFF8F4 100%);
-    border: 1.5px solid rgba(255,107,26,0.25);
-    border-radius: 12px;
-    display: none;
+    border: 1.5px solid rgba(255,107,26,0.25); border-radius: 12px; display: none;
   }
-
   .result-card.visible { display: block; animation: fadeIn 0.3s ease; }
-
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(6px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .result-label {
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--saffron);
-    margin-bottom: 8px;
-  }
-
-  .result-path {
-    font-size: 15px;
-    color: var(--deep);
-    font-weight: 400;
-    line-height: 1.6;
-  }
-
-  .result-path .crumb {
-    color: var(--muted);
-    font-size: 12px;
-  }
-
-  .result-path .place-name {
-    font-weight: 600;
-    font-size: 17px;
-    color: var(--deep);
-    display: block;
-    margin-top: 2px;
-  }
-
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+  .result-label { font-size: 10px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--saffron); margin-bottom: 10px; }
+  .result-rows { display: flex; flex-direction: column; gap: 4px; }
+  .result-row { display: flex; gap: 8px; font-size: 13px; }
+  .result-key { color: var(--muted); min-width: 70px; font-size: 12px; }
+  .result-val { color: var(--deep); font-weight: 500; }
   .copy-btn {
-    margin-top: 12px;
-    padding: 8px 16px;
-    background: white;
-    border: 1.5px solid var(--border);
-    border-radius: 8px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--deep);
-    cursor: pointer;
-    transition: all 0.15s;
+    margin-top: 12px; padding: 8px 16px; background: white; border: 1.5px solid var(--border);
+    border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500;
+    color: var(--deep); cursor: pointer; transition: all 0.15s;
   }
-
-  .copy-btn:hover {
-    border-color: var(--saffron);
-    color: var(--saffron);
-  }
-
-  .copy-btn.copied {
-    background: var(--green);
-    border-color: var(--green);
-    color: white;
-  }
-
-  .loading {
-    font-size: 12px;
-    color: var(--muted);
-    padding: 10px 0 2px;
-    display: none;
-  }
-
-  .loading.visible { display: block; }
-
+  .copy-btn:hover { border-color: var(--saffron); color: var(--saffron); }
+  .copy-btn.copied { background: var(--green); border-color: var(--green); color: white; }
   .count-badge {
-    display: inline-block;
-    font-size: 10px;
-    font-weight: 600;
-    background: var(--border);
-    color: var(--muted);
-    padding: 2px 7px;
-    border-radius: 20px;
-    margin-left: 6px;
-    vertical-align: middle;
+    display: inline-block; font-size: 10px; font-weight: 600; background: var(--border);
+    color: var(--muted); padding: 2px 7px; border-radius: 20px; margin-left: 6px; vertical-align: middle;
   }
-
-  .footer {
-    text-align: center;
-    margin-top: 20px;
-    font-size: 11px;
-    color: var(--muted);
-    letter-spacing: 0.02em;
-  }
-
-  /* Loading state for initial data fetch */
-  .init-loading {
-    text-align: center;
-    padding: 48px 24px;
-  }
-
+  .footer { text-align: center; margin-top: 20px; font-size: 11px; color: var(--muted); letter-spacing: 0.02em; }
+  #init-loading { text-align: center; padding: 48px 24px; }
   .spinner {
-    width: 32px;
-    height: 32px;
-    border: 3px solid var(--border);
-    border-top-color: var(--saffron);
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-    margin: 0 auto 16px;
+    width: 32px; height: 32px; border: 3px solid var(--border); border-top-color: var(--saffron);
+    border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 16px;
   }
-
   @keyframes spin { to { transform: rotate(360deg); } }
-
-  .error-msg {
-    background: #FFF0F0;
-    border: 1.5px solid #FFCCCC;
-    border-radius: 10px;
-    padding: 16px;
-    font-size: 13px;
-    color: #CC3333;
-    line-height: 1.6;
-    display: none;
-  }
-
+  .error-msg { background: #FFF0F0; border: 1.5px solid #FFCCCC; border-radius: 10px; padding: 16px; font-size: 13px; color: #CC3333; line-height: 1.6; display: none; }
   .error-msg.visible { display: block; }
-  .error-msg code { background: #FFE0E0; padding: 2px 6px; border-radius: 4px; font-size: 12px; }
 </style>
 </head>
 <body>
 <div class="container">
-
   <div class="header">
     <div class="flag-stripe">
       <span class="stripe-saffron"></span>
@@ -326,17 +126,13 @@
       <span class="stripe-green"></span>
     </div>
     <h1>India</h1>
-    <p>Select your <strong>location</strong></p>
+    <p>Select your <strong>location & board</strong></p>
   </div>
 
-  <!-- Config: replace this URL with your hosted JSON file URL -->
-  <div id="error-msg" class="error-msg">
-    ⚠️ Could not load location data.<br>
-    Please update the <code>DATA_URL</code> in this file to point to your hosted <code>india_data_fixed.json</code>.
-  </div>
+  <div id="error-msg" class="error-msg">⚠️ Could not load location data. Please check the DATA_URL in this file.</div>
 
   <div id="init-loading" class="card">
-    <div class="init-loading">
+    <div style="text-align:center;padding:48px 24px">
       <div class="spinner"></div>
       <div style="font-size:13px;color:var(--muted)">Loading India location data…</div>
     </div>
@@ -375,194 +171,260 @@
         <div class="step-num" id="num3">3</div>
         <div class="step-title">City / Town / Village <span id="placeCount" class="count-badge" style="display:none"></span></div>
       </div>
-      <div class="loading" id="loadingPlaces">Loading places…</div>
       <div class="select-wrap">
         <select id="placeSelect" onchange="onPlaceChange()">
           <option value="">Select district first…</option>
         </select>
       </div>
     </div>
+
+    <!-- Step 4: Board -->
+    <div class="step disabled" id="step4">
+      <div class="step-label">
+        <div class="step-num" id="num4">4</div>
+        <div class="step-title">Educational Board</div>
+      </div>
+      <div id="boardContainer">
+        <div class="no-boards">Select a place first…</div>
+      </div>
+    </div>
   </div>
 
   <div id="result" class="result-card">
-    <div class="result-label">📍 Selected Location</div>
-    <div class="result-path">
-      <span class="crumb" id="result-breadcrumb"></span>
-      <span class="place-name" id="result-place"></span>
+    <div class="result-label">📍 Selected</div>
+    <div class="result-rows">
+      <div class="result-row"><span class="result-key">Place</span><span class="result-val" id="r-place">—</span></div>
+      <div class="result-row"><span class="result-key">District</span><span class="result-val" id="r-district">—</span></div>
+      <div class="result-row"><span class="result-key">State</span><span class="result-val" id="r-state">—</span></div>
+      <div class="result-row" id="r-board-row" style="display:none"><span class="result-key">Board</span><span class="result-val" id="r-board">—</span></div>
     </div>
-    <button class="copy-btn" id="copyBtn" onclick="copyResult()">Copy location</button>
+    <button class="copy-btn" id="copyBtn" onclick="copyResult()">Copy selection</button>
   </div>
 
-  <div class="footer">All 35 states &amp; UTs · 774 districts · 6.7 lakh+ places</div>
+  <div class="footer">35 states & UTs · 774 districts · 6.7 lakh+ places · 70+ boards</div>
 </div>
 
 <script>
-  // ─── CONFIG ────────────────────────────────────────────────────────────────
-  const DATA_URL = 'https://cdn.jsdelivr.net/gh/oikantiknath/india-location-selector@main/india_data_fixed.json';
-  // ───────────────────────────────────────────────────────────────────────────
+const DATA_URL = 'india_data_fixed.json';
 
-  let allData = null;
+const BOARDS = {"national":[{"name":"Central Board of Secondary Education (CBSE)","category":"National & Central"},{"name":"National Institute of Open Schooling (NIOS)","category":"National & Central"},{"name":"Council for the Indian School Certificate Examinations (CISCE)","category":"National & Central"}],"international":[{"name":"Cambridge Assessment International Examinations","category":"International"},{"name":"Pearson Edexcel Ltd.","category":"International"},{"name":"International Baccalaureate","category":"International"},{"name":"Northwest Accreditation Commission (NWAC)","category":"International"},{"name":"Sampurnanand Sanskrit Vishwavidyalay","category":"International"},{"name":"Bhutan Council for School Examinations & Assessment","category":"International"},{"name":"Mauritius Examination Syndicate","category":"International"},{"name":"National Examinations Board","category":"International"}],"by_state":{"Andhra Pradesh":[{"name":"Board of Intermediate Education","category":"State Board"},{"name":"Board of Secondary Education","category":"State Board"},{"name":"A.P. Open School Society","category":"State Board"}],"Assam":[{"name":"Assam Higher Secondary Education Council","category":"State Board"},{"name":"Board of Secondary Education","category":"State Board"},{"name":"Assam Sanskrit Board","category":"Sanskrit Board"},{"name":"State Madrassa Education Board","category":"Madrasa Board"}],"Bihar":[{"name":"Bihar School Examination Board","category":"State Board"},{"name":"Bihar Board of Open Schooling and Examination","category":"State Board"},{"name":"Bihar Sanskrit Shiksha Board","category":"Sanskrit Board"},{"name":"Bihar State Madrasa Education Board","category":"Madrasa Board"}],"Chhattisgarh":[{"name":"Chhattisgarh Board of Secondary Education","category":"State Board"},{"name":"Chhattisgarh State Open School","category":"State Board"},{"name":"Chhattisgarh Sanskrit Board","category":"Sanskrit Board"},{"name":"Chhattisgarh Madrasa Board","category":"Madrasa Board"}],"Goa":[{"name":"Goa Board of Secondary and Higher Secondary Education","category":"State Board"}],"Gujarat":[{"name":"Gujarat Secondary and Higher Secondary Education Board","category":"State Board"}],"Haryana":[{"name":"Board of School Education","category":"State Board"}],"Himachal Pradesh":[{"name":"H. P. Board of School Education","category":"State Board"}],"Jammu And Kashmir":[{"name":"The J & K State Board of School Education","category":"State Board"}],"Jharkhand":[{"name":"Jharkhand Academic Council","category":"State Board"}],"Karnataka":[{"name":"Govt. of Karnataka Dept. of Pre-University Education","category":"State Board"},{"name":"Karnataka Secondary Education, Examination Board","category":"State Board"}],"Kerala":[{"name":"Kerala Board of Public Examination","category":"State Board"},{"name":"Kerala Board of Higher Secondary Education","category":"State Board"},{"name":"Board of Vocational Higher Secondary Education","category":"State Board"}],"Maharashtra":[{"name":"Maharashtra State Board of Secondary and Higher Secondary Education","category":"State Board"}],"Madhya Pradesh":[{"name":"Board of Secondary Education","category":"State Board"},{"name":"M. P. State Open School Education Board","category":"State Board"}],"Manipur":[{"name":"Board of Secondary Education","category":"State Board"},{"name":"Council of Higher Secondary Education","category":"State Board"}],"Meghalaya":[{"name":"Meghalaya Board of School Education","category":"State Board"}],"Mizoram":[{"name":"Mizoram Board of School Education","category":"State Board"}],"Nagaland":[{"name":"Nagaland Board of School Education","category":"State Board"}],"Odisha":[{"name":"Board of Secondary Education","category":"State Board"},{"name":"Council of Higher Secondary Education","category":"State Board"}],"Punjab":[{"name":"Punjab School Education Board","category":"State Board"}],"Rajasthan":[{"name":"Board of Secondary Education","category":"State Board"},{"name":"Rajasthan State Open School","category":"State Board"},{"name":"Banasthali Vidyapith","category":"University Affiliated"}],"Tamil Nadu":[{"name":"State Board of School Examinations (Sec.) & Board of Higher Secondary","category":"State Board"}],"Telangana":[{"name":"Board of Secondary Education","category":"State Board"},{"name":"Telangana State Board of Intermediate Education","category":"State Board"},{"name":"Telangana Open School Society","category":"State Board"}],"Tripura":[{"name":"Tripura Board of Secondary Education","category":"State Board"}],"Uttar Pradesh":[{"name":"U.P. Board of High School & Intermediate Education","category":"State Board"},{"name":"U.P. Board of Sec. Sanskrit Education","category":"Sanskrit Board"},{"name":"Aligarh Muslim University Board of Sec. & Sr. Secondary Education","category":"University Affiliated"},{"name":"Dayalbagh Educational Institute","category":"University Affiliated"}],"Uttarakhand":[{"name":"Board of School Education","category":"State Board"},{"name":"Uttrakhand Sanskrit Shiksha Parishad","category":"Sanskrit Board"},{"name":"Uttarakhand Madrasa Education Board","category":"Madrasa Board"}],"West Bengal":[{"name":"West Bengal Board of Secondary Education","category":"State Board"},{"name":"West Bengal Council of Higher Secondary Education","category":"State Board"},{"name":"The West Bengal Council of Rabindra Open Schooling","category":"State Board"},{"name":"West Bengal State Council of Technical & Vocational Education","category":"State Board"},{"name":"West Bengal Board of Madrasah Education","category":"Madrasa Board"}],"Delhi":[{"name":"Maharishi Patanjali Sanskrit Sansthan","category":"Sanskrit Board"},{"name":"Urdu Education Board","category":"Sanskrit Board"},{"name":"Jamia Milia Islamia","category":"University Affiliated"},{"name":"Indian Council for Hindi & Sanskrit Education","category":"University Affiliated"}]}};
 
-  async function loadData() {
-    try {
-      const res = await fetch(DATA_URL);
-      if (!res.ok) throw new Error('HTTP ' + res.status);
-      allData = await res.json();
-      initUI();
-    } catch (e) {
-      document.getElementById('init-loading').style.display = 'none';
-      document.getElementById('error-msg').classList.add('visible');
-    }
-  }
+let allData = null;
+let selectedBoard = null;
 
-  function initUI() {
+const categoryClass = {
+  'National & Central': 'national',
+  'International': 'international',
+  'State Board': 'state',
+  'Sanskrit Board': 'sanskrit',
+  'Madrasa Board': 'madrasa',
+  'University Affiliated': 'university',
+};
+
+const categoryLabel = {
+  'National & Central': '📚 National & Central',
+  'State Board': '🏛️ State Boards',
+  'Sanskrit Board': '🕉️ Sanskrit',
+  'Madrasa Board': '🕌 Madrasa',
+  'University Affiliated': '🎓 University Affiliated',
+  'International': '🌍 International',
+};
+
+async function loadData() {
+  try {
+    const res = await fetch(DATA_URL);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    allData = await res.json();
+    initUI();
+  } catch (e) {
     document.getElementById('init-loading').style.display = 'none';
-    document.getElementById('main-card').style.display = 'block';
+    document.getElementById('error-msg').classList.add('visible');
+  }
+}
 
-    const stateSelect = document.getElementById('stateSelect');
-    const states = Object.keys(allData).sort();
-    states.forEach(s => {
-      const opt = document.createElement('option');
-      opt.value = s;
-      opt.textContent = s;
-      stateSelect.appendChild(opt);
+function initUI() {
+  document.getElementById('init-loading').style.display = 'none';
+  document.getElementById('main-card').style.display = 'block';
+  const stateSelect = document.getElementById('stateSelect');
+  Object.keys(allData).sort().forEach(s => {
+    const opt = document.createElement('option');
+    opt.value = s; opt.textContent = s;
+    stateSelect.appendChild(opt);
+  });
+}
+
+function onStateChange() {
+  const state = document.getElementById('stateSelect').value;
+  resetDistrict(); resetPlace(); resetBoard();
+  document.getElementById('result').classList.remove('visible');
+  if (!state) { markActive(1); return; }
+  markDone(1);
+
+  const districts = Object.keys(allData[state]).sort();
+  const districtSelect = document.getElementById('districtSelect');
+  districtSelect.innerHTML = '<option value="">Choose a district…</option>';
+  districts.forEach(d => {
+    const opt = document.createElement('option');
+    opt.value = d; opt.textContent = d;
+    districtSelect.appendChild(opt);
+  });
+  const badge = document.getElementById('districtCount');
+  badge.textContent = districts.length; badge.style.display = 'inline-block';
+  markActive(2);
+}
+
+function onDistrictChange() {
+  const state = document.getElementById('stateSelect').value;
+  const district = document.getElementById('districtSelect').value;
+  resetPlace(); resetBoard();
+  document.getElementById('result').classList.remove('visible');
+  if (!district) { markActive(2); return; }
+  markDone(2);
+
+  const places = (allData[state][district] || []).sort();
+  const placeSelect = document.getElementById('placeSelect');
+  placeSelect.innerHTML = '<option value="">Choose a place…</option>';
+  places.forEach(p => {
+    const opt = document.createElement('option');
+    opt.value = p; opt.textContent = p;
+    placeSelect.appendChild(opt);
+  });
+  const badge = document.getElementById('placeCount');
+  badge.textContent = places.length.toLocaleString(); badge.style.display = 'inline-block';
+  markActive(3);
+}
+
+function onPlaceChange() {
+  const place = document.getElementById('placeSelect').value;
+  resetBoard();
+  if (!place) { markActive(3); document.getElementById('result').classList.remove('visible'); return; }
+  markDone(3);
+  markActive(4);
+  renderBoards();
+  updateResult();
+}
+
+function renderBoards() {
+  const state = document.getElementById('stateSelect').value;
+  const container = document.getElementById('boardContainer');
+  container.innerHTML = '';
+  selectedBoard = null;
+
+  // Build grouped board list
+  const groups = {};
+
+  // National always first
+  if (BOARDS.national.length) {
+    groups['National & Central'] = BOARDS.national;
+  }
+
+  // State-specific boards
+  const stateSpecific = BOARDS.by_state[state] || [];
+  stateSpecific.forEach(b => {
+    if (!groups[b.category]) groups[b.category] = [];
+    groups[b.category].push(b);
+  });
+
+  // International always last
+  if (BOARDS.international.length) {
+    groups['International'] = BOARDS.international;
+  }
+
+  const order = ['National & Central', 'State Board', 'Sanskrit Board', 'Madrasa Board', 'University Affiliated', 'International'];
+
+  order.forEach(cat => {
+    if (!groups[cat] || !groups[cat].length) return;
+
+    const label = document.createElement('div');
+    label.className = 'board-section-label';
+    label.textContent = categoryLabel[cat] || cat;
+    container.appendChild(label);
+
+    const tagsDiv = document.createElement('div');
+    tagsDiv.className = 'board-tags';
+
+    groups[cat].forEach(board => {
+      const tag = document.createElement('div');
+      tag.className = `tag ${categoryClass[cat] || 'state'}`;
+      tag.innerHTML = `<span class="dot"></span>${board.name}`;
+      tag.onclick = () => selectBoard(tag, board.name);
+      tagsDiv.appendChild(tag);
     });
+
+    container.appendChild(tagsDiv);
+  });
+}
+
+function selectBoard(el, name) {
+  document.querySelectorAll('.tag').forEach(t => t.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedBoard = name;
+  updateResult();
+  document.getElementById('r-board-row').style.display = 'flex';
+  document.getElementById('r-board').textContent = name;
+}
+
+function updateResult() {
+  const state = document.getElementById('stateSelect').value;
+  const district = document.getElementById('districtSelect').value;
+  const place = document.getElementById('placeSelect').value;
+  if (!place) return;
+
+  document.getElementById('r-place').textContent = place;
+  document.getElementById('r-district').textContent = district;
+  document.getElementById('r-state').textContent = state;
+  if (!selectedBoard) {
+    document.getElementById('r-board-row').style.display = 'none';
   }
+  document.getElementById('result').classList.add('visible');
+}
 
-  function onStateChange() {
-    const state = document.getElementById('stateSelect').value;
-    const districtSelect = document.getElementById('districtSelect');
-    const step2 = document.getElementById('step2');
-    const step3 = document.getElementById('step3');
+function copyResult() {
+  const state = document.getElementById('stateSelect').value;
+  const district = document.getElementById('districtSelect').value;
+  const place = document.getElementById('placeSelect').value;
+  let text = `${place}, ${district}, ${state}`;
+  if (selectedBoard) text += ` | Board: ${selectedBoard}`;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById('copyBtn');
+    btn.textContent = '✓ Copied!'; btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy selection'; btn.classList.remove('copied'); }, 2000);
+  });
+}
 
-    // Reset downstream
-    resetDistrict();
-    resetPlace();
-    document.getElementById('result').classList.remove('visible');
-
-    if (!state) {
-      step2.classList.add('disabled');
-      step2.classList.remove('active');
-      document.getElementById('num1').style.background = '';
-      return;
-    }
-
-    // Mark step 1 done
-    document.getElementById('step1').classList.remove('active');
-    document.getElementById('step1').classList.add('done');
-    document.getElementById('num1').style.background = 'var(--green)';
-
-    // Populate districts
-    const districts = Object.keys(allData[state]).sort();
-    districtSelect.innerHTML = '<option value="">Choose a district…</option>';
-    districts.forEach(d => {
-      const opt = document.createElement('option');
-      opt.value = d;
-      opt.textContent = d;
-      districtSelect.appendChild(opt);
-    });
-
-    const badge = document.getElementById('districtCount');
-    badge.textContent = districts.length;
-    badge.style.display = 'inline-block';
-
-    step2.classList.remove('disabled');
-    step2.classList.add('active');
-    step3.classList.add('disabled');
+function markDone(n) {
+  const step = document.getElementById('step' + n);
+  step.classList.remove('active', 'disabled'); step.classList.add('done');
+  document.getElementById('num' + n).style.background = 'var(--green)';
+  document.getElementById('num' + n).style.color = 'white';
+}
+function markActive(n) {
+  const step = document.getElementById('step' + n);
+  step.classList.remove('disabled', 'done'); step.classList.add('active');
+  document.getElementById('num' + n).style.background = 'var(--saffron)';
+  document.getElementById('num' + n).style.color = 'white';
+  // disable all after
+  for (let i = n+1; i <= 4; i++) {
+    const s = document.getElementById('step' + i);
+    s.classList.remove('active', 'done'); s.classList.add('disabled');
+    document.getElementById('num' + i).style.background = '';
+    document.getElementById('num' + i).style.color = '';
   }
+}
+function resetDistrict() {
+  document.getElementById('districtSelect').innerHTML = '<option value="">Select state first…</option>';
+  document.getElementById('districtCount').style.display = 'none';
+}
+function resetPlace() {
+  document.getElementById('placeSelect').innerHTML = '<option value="">Select district first…</option>';
+  document.getElementById('placeCount').style.display = 'none';
+}
+function resetBoard() {
+  document.getElementById('boardContainer').innerHTML = '<div class="no-boards">Select a place first…</div>';
+  selectedBoard = null;
+}
 
-  function onDistrictChange() {
-    const state = document.getElementById('stateSelect').value;
-    const district = document.getElementById('districtSelect').value;
-    const step3 = document.getElementById('step3');
-
-    resetPlace();
-    document.getElementById('result').classList.remove('visible');
-
-    if (!district) {
-      step3.classList.add('disabled');
-      step3.classList.remove('active');
-      return;
-    }
-
-    // Mark step 2 done
-    document.getElementById('step2').classList.remove('active');
-    document.getElementById('step2').classList.add('done');
-    document.getElementById('num2').style.background = 'var(--green)';
-
-    // Populate places
-    const places = (allData[state][district] || []).sort();
-    const placeSelect = document.getElementById('placeSelect');
-    placeSelect.innerHTML = '<option value="">Choose a place…</option>';
-    places.forEach(p => {
-      const opt = document.createElement('option');
-      opt.value = p;
-      opt.textContent = p;
-      placeSelect.appendChild(opt);
-    });
-
-    const badge = document.getElementById('placeCount');
-    badge.textContent = places.length.toLocaleString();
-    badge.style.display = 'inline-block';
-
-    step3.classList.remove('disabled');
-    step3.classList.add('active');
-  }
-
-  function onPlaceChange() {
-    const state = document.getElementById('stateSelect').value;
-    const district = document.getElementById('districtSelect').value;
-    const place = document.getElementById('placeSelect').value;
-
-    if (!place) {
-      document.getElementById('result').classList.remove('visible');
-      return;
-    }
-
-    document.getElementById('step3').classList.remove('active');
-    document.getElementById('step3').classList.add('done');
-    document.getElementById('num3').style.background = 'var(--green)';
-
-    document.getElementById('result-breadcrumb').textContent = state + '  ›  ' + district + '  ›';
-    document.getElementById('result-place').textContent = place;
-    document.getElementById('result').classList.add('visible');
-    document.getElementById('copyBtn').textContent = 'Copy location';
-    document.getElementById('copyBtn').classList.remove('copied');
-  }
-
-  function resetDistrict() {
-    const districtSelect = document.getElementById('districtSelect');
-    districtSelect.innerHTML = '<option value="">Select state first…</option>';
-    document.getElementById('districtCount').style.display = 'none';
-    document.getElementById('step2').classList.remove('done', 'active');
-    document.getElementById('num2').style.background = '';
-  }
-
-  function resetPlace() {
-    const placeSelect = document.getElementById('placeSelect');
-    placeSelect.innerHTML = '<option value="">Select district first…</option>';
-    document.getElementById('placeCount').style.display = 'none';
-    document.getElementById('step3').classList.remove('done', 'active');
-    document.getElementById('num3').style.background = '';
-  }
-
-  function copyResult() {
-    const state = document.getElementById('stateSelect').value;
-    const district = document.getElementById('districtSelect').value;
-    const place = document.getElementById('placeSelect').value;
-    const text = `${place}, ${district}, ${state}`;
-    navigator.clipboard.writeText(text).then(() => {
-      const btn = document.getElementById('copyBtn');
-      btn.textContent = '✓ Copied!';
-      btn.classList.add('copied');
-      setTimeout(() => {
-        btn.textContent = 'Copy location';
-        btn.classList.remove('copied');
-      }, 2000);
-    });
-  }
-
-  loadData();
+loadData();
 </script>
 </body>
 </html>
